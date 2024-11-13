@@ -1,0 +1,46 @@
+<!-- app/views/restaurants/show.html.erb -->
+<div class="card mb-4">
+  <div class="card-body">
+    <h2 class="card-title"><%= @restaurant.name %></h2>
+    <p class="card-text">
+      <strong>Address:</strong> <%= @restaurant.address %><br>
+      <strong>Phone Number:</strong> <%= @restaurant.phone_number %><br>
+      <strong>Category:</strong> <%= @restaurant.category %><br>
+      <strong>Average Rating:</strong> <%= @restaurant.average_rating %> / 5
+    </p>
+  </div>
+</div>
+
+<h3>Reviews</h3>
+<% if @restaurant.reviews.any? %>
+  <ul class="list-group mb-4">
+    <% @restaurant.reviews.each do |review| %>
+      <li class="list-group-item">
+        <strong>Rating:</strong> <%= review.rating %> - <%= review.content %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No reviews yet.</p>
+<% end %>
+
+<!-- app/views/restaurants/show.html.erb -->
+<h4>Leave a Review</h4>
+<% if @review.errors.any? %>
+  <div class="alert alert-danger">
+    <h5><%= pluralize(@review.errors.count, "error") %> prohibited this review from being saved:</h5>
+    <ul>
+      <% @review.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+
+<%= simple_form_for [@restaurant, @review] do |f| %>
+  <div class="form-group">
+    <%= f.input :rating, collection: 0..5, label: "Rating (0 to 5)", input_html: { class: "form-control" } %>
+    <%= f.input :content, as: :text, label: "Your review", input_html: { class: "form-control" } %>
+    <%= f.submit "Submit Review", class: "btn btn-primary mt-2" %>
+  </div>
+<% end %>
